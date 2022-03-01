@@ -1,0 +1,3 @@
+{
+  "xsappname": "products-service-<%= iuser_name %>"
+}

@@ -1,0 +1,42 @@
+---
+applications:
+
+- name: products-service
+  host: products-service-<%= iuser_name %>
+  memory: 128M
+  path: service
+  services:
+    - products-uaa
+
+- name: products-service-broker
+  host: products-service-broker-<%= iuser_name %>
+  memory: 128M
+  path: broker
+  services:
+    - products-uaa
+    - broker-audit
+  health-check-type: http
+  health-check-http-endpoint: /health
+  env:
+      SBF_CATALOG_SUFFIX: <%= iuser_name %>
+      SBF_BROKER_CREDENTIALS_HASH: >
+        {
+          "<%= broker_user_name %>": "[hashed-password]"
+        }
+      SBF_SERVICE_CONFIG: >
+        {
+          "products-service": {
+            "extend_credentials": {
+              "shared": {
+                "downloadUrl": "https://mrmawsus10-mrm-mrm-byod-market-data-download.cfapps.us10.hana.ondemand.com/downloadMarketData",
+                "uploadUrl": "https://mrmawsus10-mrm-mrm-byod-market-data-upload.cfapps.us10.hana.ondemand.com/uploadMarketData",
+                "vendor": "CryptoRates"
+              },
+              "per_plan": {
+                "default": {
+                  "url": "https://products-service-<%= iuser_name %>.<%= cf_domain %>"
+                }
+              }
+            }
+          }
+        }

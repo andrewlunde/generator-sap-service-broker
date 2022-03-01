@@ -1,0 +1,11 @@
+{
+  "services": [{
+    "name": "products-service",
+    "description": "Demo Products service",
+    "bindable": true,
+    "plans": [{
+      "name": "default",
+      "description": "Demo products service plan"
+    }]
+  }]
+}
