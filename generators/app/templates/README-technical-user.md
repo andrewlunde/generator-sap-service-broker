@@ -46,7 +46,7 @@ tools/finalize-setup.sh
 
 Broker password to be hashed: 
 Warning: For ISO/SOC compliance, the password should be at least 15 characters long.
-Hashed credentials: passwd
+Hashed credentials: [password]
 sha256:cysd0RjF1dHqcJ5CDgZvddTD9DgJa78ov1hXlnCxKsQ=:lTETIvPe+ZYETjw5ELjk7a0uKjvc6oLOtwGlxhrXn/A=
 
 ```
@@ -63,7 +63,13 @@ Change `<%= cf_domain %>` with the CF domain e.g. `cfapps.sap.hana.ondemand.com`
 As a first step we create an UAA service instance of plan broker to bind to our service and service broker. The service name is provided to service and service broker applications via environment variables.
 
 ```sh
-cf create-service xsuaa broker products-uaa -c xs-security.json
+cf create-service xsuaa broker <%= app_name %>-uaa -c xs-security.json
+```
+
+### Create auditlog service of plan standard (from prerequisites.md)
+
+```bash
+cf create-service auditlog standard <%= app_name %>-audit
 ```
 
 ### Push service
@@ -78,21 +84,25 @@ Before executing the next command you need to substitute the placeholders in it.
 This command registers new service broker with space scope at the provided URL.
 
 ```sh
-cf create-service-broker products-demo-service-broker-<%= iuser_name %> <%= broker_user_name %> passwd https://products-service-broker-<%= iuser_name %>.<%= cf_domain %> --space-scoped
-
-cf create-service-broker products-demo-service-broker-<%= iuser_name %> <%= broker_user_name %> passwd https://products-service-broker-<%= iuser_name %>.<%= cf_domain %>/broker --space-scoped
-
-cf t -o theta
-cf create-service-broker products-demo-service-broker-<%= iuser_name %>/theta <%= broker_user_name %> passwd https://products-service-broker-<%= iuser_name %>.<%= cf_domain %> --space-scoped
-
-cf create-service-broker products-demo-service-broker-<%= iuser_name %>/theta <%= broker_user_name %> passwd https://products-service-broker-<%= iuser_name %>.<%= cf_domain %>/broker --space-scoped
-
+cf create-service-broker <%= app_name %>-service-broker-<%= suffix_name %> <%= broker_user_name %> [password] https://<%= app_name %>-service-broker-<%= suffix_name %>.<%= cf_domain %> --space-scoped
+```
+Here's an example of how a customer would register your service-broker in their org/space
+```sh
+cf t -o <%= excust_org_name %>
+cf create-service-broker <%= app_name %>-service-broker-<%= suffix_name %>/<%= excust_org_name %> <%= broker_user_name %> [password] https://<%= app_name %>-service-broker-<%= suffix_name %>.<%= cf_domain %> --space-scoped
+```
+Verify that the service broker is registered and appearing in the marketplace
+```sh
+cf service-brokers
+cf m | grep <%= app_name %>-service-<%= suffix_name %>
+```
+Now create a service instance of your custom service broker and bind it to an example consumer app
+```sh
 cd consumer
-cf create-service products-service-<%= iuser_name %> default products-service-instance -c parameters.json
-
+cf create-service <%= app_name %>-service-<%= suffix_name %> default <%= app_name %>-service-instance -c parameters.json
 ```
 
-## Consume the newly created Products service
+## Consume the newly created <%= app_name %> service
 
 To demonstrate the usage of products service there is a small consumer application prepared in _consumer_ directory.
 
@@ -127,10 +137,10 @@ npm install
 
 Open `consumer/manifest.yml` and substitute `[c/d/i-user]` with your user ID or other string that will not result in collisions with host names.
 
-### Create service instance of type products-service
+### Create service instance of type <%= app_name %>-service
 
 ```sh
-cf create-service products-service-<%= iuser_name %> default products-service-instance -c parameters.json
+cf create-service <%= app_name %>-service-<%= suffix_name %> default <%= app_name %>-service-instance -c parameters.json
 ```
 
 ### Deploy the consumer application
@@ -144,34 +154,34 @@ cf push
 Get the consumer application URL using CF cli, like:
 
 ```sh
-cf app products-service-consumer
+cf app <%= app_name %>-service-consumer
 ```
 
 Get products by appending the `/products` to the URL and request it via browser for example.
 
 Check the service logs
 ```sh
-cf logs products-service --recent
+cf logs <%= app_name %>-service --recent
 ```
 You should see the data extracted from the token, e.g.
 ```
 2017-07-13T17:54:16.82+0300 [APP/PROC/WEB/0] OUT Service instance id: 167395a5-de69-422f-bfe0-1ea553ad7e30
 2017-07-13T17:54:16.82+0300 [APP/PROC/WEB/0] OUT Caller tenant id: cc-sap
 2017-07-13T17:54:16.82+0300 [APP/PROC/WEB/0] OUT Token grant type: client_credentials
-2017-07-13T17:54:16.82+0300 [APP/PROC/WEB/0] OUT Calling app has name products-service-consumer and id f407548d-0854-435b-8d26-d91a95ad4c64
+2017-07-13T17:54:16.82+0300 [APP/PROC/WEB/0] OUT Calling app has name <%= app_name %>-service-consumer and id f407548d-0854-435b-8d26-d91a95ad4c64
 ```
 
 ## Cleanup
 
 When you no longer need this example, you can delete its artifacts from Cloud Foundry:
 ```sh
-cf delete -r -f products-service-consumer
-cf delete-service -f products-service-instance
-cf delete-service-broker -f products-demo-service-broker-<%= iuser_name %>
-cf delete-service-broker -f products-demo-service-broker-<%= iuser_name %>/theta
-cf delete -r -f products-service-broker
-cf delete -r -f products-service
+cf delete -r -f <%= app_name %>-service-consumer
+cf delete-service -f <%= app_name %>-service-instance
+cf delete-service-broker -f <%= app_name %>-service-broker-<%= suffix_name %>
+cf delete-service-broker -f <%= app_name %>-service-broker-<%= suffix_name %>/<%= excust_org_name %>
+cf delete -r -f <%= app_name %>-service-broker
+cf delete -r -f <%= app_name %>-service
 
-cf delete-service -f products-uaa
-cf delete-service broker-audit -f
+cf delete-service -f <%= app_name %>-uaa
+cf delete-service -f <%= app_name %>-audit
 ```

@@ -10,7 +10,7 @@ cd ..
 echo ""
 
 echo "Creating a hashed password for the broker service."
-echo "Use the password you entered here in the 'cf create-service-broker' command."
+echo "Use the [password] you entered here in the 'cf create-service-broker' command."
 hash-broker-password
 echo ""
 

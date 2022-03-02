@@ -162,11 +162,13 @@ module.exports = class extends Generator {
     this.answers = {};
     this.config.defaults({
       project_name: this.appname,
-      app_name: "app",
-      app_desc: "App Description",
-      iuser_name: "i830671",
+      app_name: "products",
+      app_desc: "Products Custom Broker Example",
+      suffix_name: "i830671",
       broker_user_name: "broker",
-      cf_domain: "cfapps.us10.hana.ondemand.com"
+      cf_domain: "cfapps.us10.hana.ondemand.com",
+      excust_org_name: "theta",
+      vendor_name: "Acme"
     });
 
   }
@@ -235,10 +237,10 @@ module.exports = class extends Generator {
       
     prompts.push({
       type: "input",
-      name: "iuser_name",
+      name: "suffix_name",
       // prefix: "The value here will be used as a suggetion.\n",
-      message: "Enter your c/d/i-user name.",
-      default: this.config.get("iuser_name")
+      message: "Enter your c/d/i-user name or other suffix for uniqueness.",
+      default: this.config.get("suffix_name")
     });
 
      prompts.push({
@@ -255,6 +257,22 @@ module.exports = class extends Generator {
       // prefix: "The value here will be used as a suggetion.\n",
       message: "Enter your landscape specific CF domain.",
       default: this.config.get("cf_domain")
+    });
+
+    prompts.push({
+      type: "input",
+      name: "excust_org_name",
+      // prefix: "The value here will be used as a suggetion.\n",
+      message: "Enter an example customer cf organization name.",
+      default: this.config.get("excust_org_name")
+    });
+
+    prompts.push({
+      type: "input",
+      name: "vendor_name",
+      // prefix: "The value here will be used as a suggetion.\n",
+      message: "Enter a vendor name.",
+      default: this.config.get("vendor_name")
     });
 
      // prompts.push({
@@ -317,9 +335,11 @@ module.exports = class extends Generator {
     this.config.set("app_name", this.answers.app_name);
     this.config.set("app_desc", this.answers.app_desc);
 
-    this.config.set("iuser_name", this.answers.iuser_name);
+    this.config.set("suffix_name", this.answers.suffix_name);
     this.config.set("broker_user_name", this.answers.broker_user_name);
     this.config.set("cf_domain", this.answers.cf_domain);
+    this.config.set("excust_org_name", this.answers.excust_org_name);
+    this.config.set("vendor_name", this.answers.vendor_name);
 
     this.config.save();
 
@@ -331,9 +351,11 @@ module.exports = class extends Generator {
       project_name: this.answers.project_name,
       app_name: this.answers.app_name,
       app_desc: this.answers.app_desc,
-      iuser_name: this.answers.iuser_name,
+      suffix_name: this.answers.suffix_name,
       broker_user_name: this.answers.broker_user_name,
       cf_domain: this.answers.cf_domain,
+      excust_org_name: this.answers.excust_org_name,
+      vendor_name: this.answers.vendor_name,
     };
 
     this.fs.copyTpl(

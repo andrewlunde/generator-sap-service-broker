@@ -1,40 +1,44 @@
 ---
 applications:
 
-- name: products-service
-  host: products-service-<%= iuser_name %>
+- name: <%= app_name %>-service
+  host: <%= app_name %>-service-<%= suffix_name %>
+  buildpacks:
+    - nodejs_buildpack
   memory: 128M
   path: service
   services:
-    - products-uaa
+    - <%= app_name %>-uaa
 
-- name: products-service-broker
-  host: products-service-broker-<%= iuser_name %>
+- name: <%= app_name %>-service-broker
+  host: <%= app_name %>-service-broker-<%= suffix_name %>
+  buildpacks:
+    - nodejs_buildpack
   memory: 128M
   path: broker
   services:
-    - products-uaa
-    - broker-audit
+    - <%= app_name %>-uaa
+    - <%= app_name %>-audit
   health-check-type: http
   health-check-http-endpoint: /health
   env:
-      SBF_CATALOG_SUFFIX: <%= iuser_name %>
+      SBF_CATALOG_SUFFIX: <%= suffix_name %>
       SBF_BROKER_CREDENTIALS_HASH: >
         {
           "<%= broker_user_name %>": "[hashed-password]"
         }
       SBF_SERVICE_CONFIG: >
         {
-          "products-service": {
+          "<%= app_name %>-service": {
             "extend_credentials": {
               "shared": {
-                "downloadUrl": "https://mrmawsus10-mrm-mrm-byod-market-data-download.cfapps.us10.hana.ondemand.com/downloadMarketData",
-                "uploadUrl": "https://mrmawsus10-mrm-mrm-byod-market-data-upload.cfapps.us10.hana.ondemand.com/uploadMarketData",
-                "vendor": "CryptoRates"
+                "downloadUrl": "https://<%= app_name %>-service-<%= suffix_name %>.<%= cf_domain %>/downloadMarketData",
+                "uploadUrl": "https://<%= app_name %>-service-<%= suffix_name %>.<%= cf_domain %>/uploadMarketData",
+                "vendor": "<%= vendor_name %>"
               },
               "per_plan": {
                 "default": {
-                  "url": "https://products-service-<%= iuser_name %>.<%= cf_domain %>"
+                  "url": "https://<%= app_name %>-service-<%= suffix_name %>.<%= cf_domain %>"
                 }
               }
             }

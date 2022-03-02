@@ -1,5 +1,5 @@
 {
   "xs-security" : {
-    "xsappname": "products-service-consumer"
+    "xsappname": "<%= app_name %>-service-consumer"
   }
 }

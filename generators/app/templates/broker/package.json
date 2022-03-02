@@ -1,7 +1,7 @@
 {
-  "name": "products-broker",
+  "name": "<%= app_name %>-broker",
   "version": "1.0.0",
-  "description": "Products service - service broker",
+  "description": "<%= app_desc %> service - service broker",
   "main": "server.js",
   "scripts": {
     "start": "node index.js",

@@ -1,6 +1,6 @@
 {
   "name": "generator-sap-service-broker",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Project Generator for SAP Custom Service Broker",
   "homepage": "https://github.com/andrewlunde/generator-sap-service-broker",
   "author": {

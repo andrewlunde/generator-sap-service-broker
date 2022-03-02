@@ -1,7 +1,7 @@
 {
-  "name": "products-service",
+  "name": "<%= app_name %>-service",
   "version": "1.0.0",
-  "description": "Example products service",
+  "description": "Example <%= app_name %> service",
   "main": "index.js",
   "scripts": {
     "start": "node server.js",

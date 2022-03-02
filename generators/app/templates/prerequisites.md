@@ -4,7 +4,7 @@
 As a prerequisite, an Audit log service instance have to be created and bound to the broker application
 
 ```bash
-cf create-service auditlog standard broker-audit
+cf create-service auditlog standard <%= app_name %>-audit
 ```
 
 ## Credentials
