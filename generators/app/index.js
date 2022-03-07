@@ -164,7 +164,7 @@ module.exports = class extends Generator {
       project_name: this.appname,
       app_name: "products",
       app_desc: "Products Custom Broker Example",
-      suffix_name: "i830671",
+      suffix_name: "dev",
       broker_user_name: "broker",
       cf_domain: "cfapps.us10.hana.ondemand.com",
       excust_org_name: "theta",

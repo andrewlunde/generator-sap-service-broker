@@ -129,18 +129,17 @@ In this example the application adds `application_name` and `application_id` pro
     }
 ```
 
-Install application dependencies:
-```sh
-cd consumer
-npm install
-```
-
 Open `consumer/manifest.yml` and substitute `[c/d/i-user]` with your user ID or other string that will not result in collisions with host names.
 
 ### Create service instance of type <%= app_name %>-service
 
 ```sh
 cf create-service <%= app_name %>-service-<%= suffix_name %> default <%= app_name %>-service-instance -c parameters.json
+```
+
+### Keep checking on the status of the service instance creation until you get 'create succeeded'
+```sh
+cf service <%= app_name %>-service-instance
 ```
 
 ### Deploy the consumer application
@@ -158,6 +157,8 @@ cf app <%= app_name %>-service-consumer
 ```
 
 Get products by appending the `/products` to the URL and request it via browser for example.
+
+[https://<%= app_name %>-service-consumer-<%= suffix_name %>.<%= cf_domain %>/products](https://<%= app_name %>-service-consumer-<%= suffix_name %>.<%= cf_domain %>/products)
 
 Check the service logs
 ```sh

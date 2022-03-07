@@ -10,6 +10,8 @@ const serviceCredentials = xsenv.getServices({ products: serviceName }).products
 const uaaBrokerCreds = serviceCredentials.uaa;
 const VCAP_APPLICATION = JSON.parse(process.env.VCAP_APPLICATION);
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
+
 const app = express();
 
 const requestAccessToken = (req, res, next) => {
@@ -26,6 +28,9 @@ const requestAccessToken = (req, res, next) => {
     'application_name': VCAP_APPLICATION.application_name
   };
   request.post(tokenURL, {
+    strictSSL: false,
+    rejectUnauthorized: false,
+    proxy: 'http://mitm:NeverTell@mitm.sap-partner-eng.com:8888',
     form: {
       'client_id': clientId,
       'client_secret': clientSecret,
@@ -52,11 +57,21 @@ const requestAccessToken = (req, res, next) => {
 const requestService = (req, res) => {
   const serviceURL = serviceCredentials.url;
   const accessToken = req.accessToken;
-  const url = `${serviceURL}/products`;
+
+  var url = `${serviceURL}` + req.path;
+  if (req.query.action != undefined) {
+    url += "?action=" + req.query.action;
+    if (req.query.product != undefined) {
+      url += "&product=" + req.query.product;
+    }
+  }
 
   console.log(`Requesting ${url}`);
 
   request.get(url, {
+    strictSSL: false,
+    rejectUnauthorized: false,
+    proxy: 'http://mitm:NeverTell@mitm.sap-partner-eng.com:8888',
     auth: {
       bearer: accessToken
     }
@@ -79,6 +94,7 @@ const requestService = (req, res) => {
 
 app.use(requestAccessToken);
 app.get('/products', requestService);
+app.get('/provisioned', requestService);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
