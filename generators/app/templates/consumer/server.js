@@ -10,7 +10,7 @@ const serviceCredentials = xsenv.getServices({ products: serviceName }).products
 const uaaBrokerCreds = serviceCredentials.uaa;
 const VCAP_APPLICATION = JSON.parse(process.env.VCAP_APPLICATION);
 
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
+// process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 
 const app = express();
 
@@ -28,9 +28,9 @@ const requestAccessToken = (req, res, next) => {
     'application_name': VCAP_APPLICATION.application_name
   };
   request.post(tokenURL, {
-    strictSSL: false,
-    rejectUnauthorized: false,
-    proxy: 'http://mitm:NeverTell@mitm.sap-partner-eng.com:8888',
+    // strictSSL: false,
+    // rejectUnauthorized: false,
+    // proxy: 'http://mitm.sap-partner-eng.com:8888',
     form: {
       'client_id': clientId,
       'client_secret': clientSecret,
@@ -69,9 +69,9 @@ const requestService = (req, res) => {
   console.log(`Requesting ${url}`);
 
   request.get(url, {
-    strictSSL: false,
-    rejectUnauthorized: false,
-    proxy: 'http://mitm:NeverTell@mitm.sap-partner-eng.com:8888',
+    // strictSSL: false,
+    // rejectUnauthorized: false,
+    // proxy: 'http://mitm.sap-partner-eng.com:8888',
     auth: {
       bearer: accessToken
     }

@@ -38,9 +38,9 @@ const broker = new Broker({
       };
 
       request.post(tokenURL, {
-        strictSSL: false,
-        rejectUnauthorized: false,
-        proxy: 'http://mitm:NeverTell@mitm.sap-partner-eng.com:8888',
+        // strictSSL: false,
+        // rejectUnauthorized: false,
+        // proxy: 'http://mitm.sap-partner-eng.com:8888',
         form: {
           'client_id': clientId,
           'client_secret': clientSecret,
@@ -68,9 +68,9 @@ const broker = new Broker({
         console.log(`Requesting ${url}`);
       
         request.get(url, {
-          strictSSL: false,
-          rejectUnauthorized: false,
-          proxy: 'http://mitm:NeverTell@mitm.sap-partner-eng.com:8888',
+          // strictSSL: false,
+          // rejectUnauthorized: false,
+          // proxy: 'http://mitm.sap-partner-eng.com:8888',
           auth: {
             bearer: accessToken
           }
@@ -117,9 +117,9 @@ const broker = new Broker({
       };
 
       request.post(tokenURL, {
-        strictSSL: false,
-        rejectUnauthorized: false,
-        proxy: 'http://mitm:NeverTell@mitm.sap-partner-eng.com:8888',
+        // strictSSL: false,
+        // rejectUnauthorized: false,
+        // proxy: 'http://mitm.sap-partner-eng.com:8888',
         form: {
           'client_id': clientId,
           'client_secret': clientSecret,
@@ -147,9 +147,9 @@ const broker = new Broker({
         console.log(`Requesting ${url}`);
       
         request.get(url, {
-          strictSSL: false,
-          rejectUnauthorized: false,
-          proxy: 'http://mitm:NeverTell@mitm.sap-partner-eng.com:8888',
+          // strictSSL: false,
+          // rejectUnauthorized: false,
+          // proxy: 'http://mitm.sap-partner-eng.com:8888',
           auth: {
             bearer: accessToken
           }
