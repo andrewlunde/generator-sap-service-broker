@@ -163,11 +163,12 @@ module.exports = class extends Generator {
     this.config.defaults({
       project_name: this.appname,
       app_name: "products",
-      app_desc: "Products Custom Broker Example",
+      app_desc: "Custom Service Broker Example",
       suffix_name: "dev",
       broker_user_name: "broker",
       cf_domain: "cfapps.us10.hana.ondemand.com",
-      excust_org_name: "theta",
+      ex1_cust_org_name: "alpha",
+      ex2_cust_org_name: "beta",
       vendor_name: "Acme"
     });
 
@@ -181,15 +182,7 @@ module.exports = class extends Generator {
       yosay(`Welcome to the ${chalk.red("\nService Broker\n")} project generator!`)
     );
 
-    this.log(
-      `After you've generated your base MTA project you can enhance it with the following subgenerators.`
-      +`\n npx --node-arg=--inspect yo sap-service-broker:subgen`
-    );
     this.log(``);
-    this.log(``);
-    this.log(
-      `* = This module is not yet available or is in developoment.  YMMV.`
-    );
     this.log(``);
 
     // const prompts = [
@@ -261,10 +254,18 @@ module.exports = class extends Generator {
 
     prompts.push({
       type: "input",
-      name: "excust_org_name",
+      name: "ex1_cust_org_name",
       // prefix: "The value here will be used as a suggetion.\n",
-      message: "Enter an example customer cf organization name.",
-      default: this.config.get("excust_org_name")
+      message: "Enter a customer cf organization name as the first test consumer.",
+      default: this.config.get("ex1_cust_org_name")
+    });
+
+    prompts.push({
+      type: "input",
+      name: "ex2_cust_org_name",
+      // prefix: "The value here will be used as a suggetion.\n",
+      message: "Enter another customer cf organization name as the second test consumer.",
+      default: this.config.get("ex2_cust_org_name")
     });
 
     prompts.push({
@@ -338,7 +339,8 @@ module.exports = class extends Generator {
     this.config.set("suffix_name", this.answers.suffix_name);
     this.config.set("broker_user_name", this.answers.broker_user_name);
     this.config.set("cf_domain", this.answers.cf_domain);
-    this.config.set("excust_org_name", this.answers.excust_org_name);
+    this.config.set("ex1_cust_org_name", this.answers.ex1_cust_org_name);
+    this.config.set("ex2_cust_org_name", this.answers.ex2_cust_org_name);
     this.config.set("vendor_name", this.answers.vendor_name);
 
     this.config.save();
@@ -354,19 +356,32 @@ module.exports = class extends Generator {
       suffix_name: this.answers.suffix_name,
       broker_user_name: this.answers.broker_user_name,
       cf_domain: this.answers.cf_domain,
-      excust_org_name: this.answers.excust_org_name,
-      vendor_name: this.answers.vendor_name,
+      ex1_cust_org_name: this.answers.ex1_cust_org_name,
+      ex2_cust_org_name: this.answers.ex2_cust_org_name,
+      vendor_name: this.answers.vendor_name
+    };
+
+    var subs1 = {
+      package_version: module.exports.version,
+      project_name: this.answers.project_name,
+      app_name: this.answers.app_name,
+      app_desc: this.answers.app_desc,
+      suffix_name: this.answers.suffix_name,
+      consumer_number: "1"
+    };
+
+    var subs2 = {
+      package_version: module.exports.version,
+      project_name: this.answers.project_name,
+      app_name: this.answers.app_name,
+      app_desc: this.answers.app_desc,
+      suffix_name: this.answers.suffix_name,
+      consumer_number: "2"
     };
 
     this.fs.copyTpl(
       this.templatePath("README.md"),
       this.destinationPath("README.md"),
-      subs
-    );
-
-    this.fs.copyTpl(
-      this.templatePath("README-technical-user.md"),
-      this.destinationPath("README-technical-user.md"),
       subs
     );
 
@@ -433,9 +448,15 @@ module.exports = class extends Generator {
     );
 
     this.fs.copyTpl(
-      this.templatePath("consumer/*"),
-      this.destinationPath("consumer"),
-      subs
+      this.templatePath("consumer1/*"),
+      this.destinationPath("consumer1"),
+      subs1
+    );
+
+    this.fs.copyTpl(
+      this.templatePath("consumer2/*"),
+      this.destinationPath("consumer2"),
+      subs2
     );
 
     this.fs.copy(
@@ -475,15 +496,13 @@ module.exports = class extends Generator {
   end() {
     this.log(``);
     this.log(``);
-    this.log(
-      `* = This module is not yet available or is in developoment.  YMMV.`
-    );
+    // this.log(
+    //   `* = This module is not yet available or is in developoment.  YMMV.`
+    // );
     this.log(``);
 
     this.log(`\nYour project is ready.  Change into it with "cd ${this.answers.project_name}"`);
-    this.log(`Build+Deploy : "cd ${this.answers.project_name} ; mkdir -p mta_archives ; mbt build -p=cf -t=mta_archives --mtar=${this.answers.project_name}.mtar ; cf deploy mta_archives/${this.answers.project_name}.mtar -f"`);
-    this.log(`UnDeploy : "cf undeploy ${this.answers.app_name} -f --delete-services"`);
-    this.log(`Change into it with "cd ${this.answers.project_name}"`);
+    this.log(`Follow the directions in the README.md file`);
     // if (cf_is_logged_in()) {
     //   this.log(JSON.stringify(get_domains()));
     // }

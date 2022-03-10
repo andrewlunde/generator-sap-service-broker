@@ -1,0 +1,10 @@
+---
+applications:
+
+- name: <%= app_name %>-service-consumer<%= consumer_number %>
+  host: <%= app_name %>-service-consumer<%= consumer_number %>-<%= suffix_name %>
+  memory: 128M
+  services:
+    - <%= app_name %>-service-instance<%= consumer_number %>
+  env:
+    PRODUCTS_SERVICE_NAME: <%= app_name %>-service-instance<%= consumer_number %>

@@ -1,0 +1,5 @@
+{
+  "xs-security" : {
+    "xsappname": "<%= app_name %>-service-consumer<%= consumer_number %>"
+  }
+}

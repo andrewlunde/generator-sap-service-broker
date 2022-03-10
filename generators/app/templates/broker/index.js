@@ -6,7 +6,7 @@ const Broker = require('@sap/sbf');
 const request = require('request');
 const xsenv = require('@sap/xsenv');
 
-const serviceName = 'sqlite-uaa';
+const serviceName = '<%= app_name %>-uaa';
 const serviceCredentials = xsenv.getServices({ products: serviceName }).products;
 const uaaBrokerCreds = serviceCredentials;
 const VCAP_APPLICATION = JSON.parse(process.env.VCAP_APPLICATION);
@@ -61,7 +61,7 @@ const broker = new Broker({
         body = JSON.parse(body);
         console.log(`Got access token ` + body.access_token);
 
-        const serviceURL = SBF_SERVICE_CONFIG['sqlite-service'].extend_credentials.per_plan.default.url;
+        const serviceURL = SBF_SERVICE_CONFIG['<%= app_name %>-service'].extend_credentials.per_plan.default.url;
         const accessToken = body.access_token;
         const url = `${serviceURL}/provision/` + params['instance_id'];
       
@@ -140,7 +140,7 @@ const broker = new Broker({
         body = JSON.parse(body);
         console.log(`Got access token ` + body.access_token);
 
-        const serviceURL = SBF_SERVICE_CONFIG['sqlite-service'].extend_credentials.per_plan.default.url;
+        const serviceURL = SBF_SERVICE_CONFIG['<%= app_name %>-service'].extend_credentials.per_plan.default.url;
         const accessToken = body.access_token;
         const url = `${serviceURL}/deprovision/` + params['instance_id'];
       

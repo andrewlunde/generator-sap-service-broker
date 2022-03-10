@@ -12,7 +12,8 @@
     "@sap/xsenv": "^2.2.0",
     "@sap/xssec": "^2.2.4",
     "express": "^4.17.1",
-    "passport": "^0.4.0"
+    "passport": "^0.4.0",
+    "sqlite3": "^5.0.0"
   },
   "engines": {
     "node": "^12.0.0"
